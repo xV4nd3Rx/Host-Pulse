@@ -52,6 +52,8 @@ Below is a preview of **HostPulse** in action:
 
 <img width="850" height="252" alt="image" src="https://github.com/user-attachments/assets/bf9ccdec-becc-4b0e-b521-75d9a6f7f8ab" />
 
+---
+
 ## 📥 Example input
 
 `targets.txt` (one domain per line):
@@ -60,6 +62,7 @@ example.com
 github.com
 dead-domain.example
 ```
+---
 ## 📤 Outputs
 
 - **results_alive.txt** - plain list of alive domains (one per line).  
