@@ -1,6 +1,6 @@
 # Host-Pulse
 
-<img width="1201" height="667" alt="image" src="https://github.com/user-attachments/assets/c559e59d-dfd3-40db-a36a-048e0138640e" />
+<img width="1141" height="652" alt="image" src="https://github.com/user-attachments/assets/9fa46972-c937-406b-98ba-cad9744a9cfb" />
 
 ![Status](https://img.shields.io/badge/status-ready-blue)
 ![Target](https://img.shields.io/badge/target-Domain%20Liveness-orange)
