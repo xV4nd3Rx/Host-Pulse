@@ -93,7 +93,9 @@ dead-domain.example
 
 Contributions, bug reports, and pull requests are welcome.  
 Please follow standard open-source etiquette - open an issue first to discuss major changes.
+
 ---
+
 ## 📬 Contacts
 - [LinkedIn](https://www.linkedin.com/in/yurii-tsarienko-a1453aa4)
 - [SecForgeHub Telegram](https://t.me/SecForgeHub)
@@ -101,5 +103,3 @@ Please follow standard open-source etiquette - open an issue first to discuss ma
 ---
 ## 📜 License
 **Host-Pulse** is released under the **MIT License** - see `LICENSE` for details.
-
-
