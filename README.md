@@ -46,3 +46,31 @@ python3 hostpulse.py --input targets.txt --out-base hostpulse_results --workers 
 # minimal example
 python3 hostpulse.py -i targets.txt -o hostpulse
 ```
+## 📥 Example input
+
+`targets.txt` (one domain per line):
+```
+example.com
+github.com
+dead-domain.example
+```
+## 📤 Outputs
+
+- **results_alive.txt** - plain list of alive domains (one per line).  
+- **results.csv** - compact CSV with columns useful for pentesters:
+
+| Field | Description |
+|:------|:-------------|
+| `domain` | Original domain |
+| `attempted_url` | Scheme + domain that was probed |
+| `resolved_ips` | Semicolon-delimited IPs found via DNS |
+| `status_code` | HTTP status code (e.g., 200, 403, 503) |
+| `server_header` | Value of `Server` header (if present) |
+| `content_type` | `Content-Type` header |
+| `title` | HTML `<title>` (if retrievable) |
+| `response_time_ms` | Elapsed time for the request |
+| `final_url` | Redirect target (if any) |
+| `cert_subject` | Short certificate subject (when HTTPS used) |
+| `error` | Errors encountered (timeouts, DNS failures, etc.) |
+
+> The CSV includes **only alive hosts** (as defined above) to keep the output focused.
