@@ -39,7 +39,7 @@ python3 -m pip install --user requests
 # optional (nice progress bar): pip install rich tqdm
 ```
 Running:
-
+```
 # single-run using a domains file
 python3 hostpulse.py --input targets.txt --out-base hostpulse_results --workers 8 --timeout 6 --dns-timeout 2
 
