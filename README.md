@@ -74,3 +74,32 @@ dead-domain.example
 | `error` | Errors encountered (timeouts, DNS failures, etc.) |
 
 > The CSV includes **only alive hosts** (as defined above) to keep the output focused.
+
+## 🛠️ Common options
+
+| Option | Description |
+|:--------|:-------------|
+| `--input, -i` | File with domains (one domain per line) |
+| `--out-base, -o` | Output base name (produces `<base>_alive.txt` and `<base>.csv`) |
+| `--workers, -w` | Number of parallel workers (default: `8`) |
+| `--delay-min` | Minimum per-request delay in seconds |
+| `--delay-max` | Maximum per-request delay in seconds |
+| `--timeout` | Total read timeout in seconds (`connect timeout = min(3, timeout)`) |
+| `--dns-timeout` | DNS resolution timeout in seconds (fast-skip dead names) |
+
+---
+
+## 🧩 Contributing
+
+Contributions, bug reports, and pull requests are welcome.  
+Please follow standard open-source etiquette - open an issue first to discuss major changes.
+---
+## 📬 Contacts
+- [LinkedIn](https://www.linkedin.com/in/yurii-tsarienko-a1453aa4)
+- [SecForgeHub Telegram](https://t.me/SecForgeHub)
+
+---
+## 📜 License
+**Host-Pulse** is released under the **MIT License** - see `LICENSE` for details.
+
+
