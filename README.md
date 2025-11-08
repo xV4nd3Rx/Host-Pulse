@@ -46,8 +46,11 @@ python3 hostpulse.py --input targets.txt --out-base hostpulse_results --workers 
 # minimal example
 python3 hostpulse.py -i targets.txt -o hostpulse
 ```
+## 📸 Screenshot
 
-<img width="642" height="231" alt="image" src="https://github.com/user-attachments/assets/23246f04-3375-4158-9b0a-e91a3240186a" />
+Below is a preview of **HostPulse** in action:
+
+<img width="850" height="252" alt="image" src="https://github.com/user-attachments/assets/bf9ccdec-becc-4b0e-b521-75d9a6f7f8ab" />
 
 ## 📥 Example input
 
