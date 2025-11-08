@@ -22,9 +22,6 @@
 
 ---
 
-<img width="642" height="231" alt="image" src="https://github.com/user-attachments/assets/0819eda5-43d5-48f7-aaa8-48b8c5ba112e" />
-
-
 ## ⚠️ Safety & Ethics
 
 - ✅ Intended **only** for systems you own or are explicitly authorized to test.  
@@ -49,6 +46,9 @@ python3 hostpulse.py --input targets.txt --out-base hostpulse_results --workers 
 # minimal example
 python3 hostpulse.py -i targets.txt -o hostpulse
 ```
+
+<img width="642" height="231" alt="image" src="https://github.com/user-attachments/assets/23246f04-3375-4158-9b0a-e91a3240186a" />
+
 ## 📥 Example input
 
 `targets.txt` (one domain per line):
