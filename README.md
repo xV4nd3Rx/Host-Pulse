@@ -22,6 +22,9 @@
 
 ---
 
+<img width="642" height="231" alt="image" src="https://github.com/user-attachments/assets/0819eda5-43d5-48f7-aaa8-48b8c5ba112e" />
+
+
 ## ⚠️ Safety & Ethics
 
 - ✅ Intended **only** for systems you own or are explicitly authorized to test.  
