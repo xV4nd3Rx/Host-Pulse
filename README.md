@@ -50,7 +50,7 @@ python3 hostpulse.py -i targets.txt -o hostpulse
 
 Below is a preview of **HostPulse** in action:
 
-<img width="829" height="228" alt="image" src="https://github.com/user-attachments/assets/fcab6119-2f0c-44c7-b598-7df53b894135" />
+<img width="833" height="264" alt="image" src="https://github.com/user-attachments/assets/57740962-9a3d-4977-87df-e28e9cbca1be" />
 
 ---
 
