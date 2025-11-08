@@ -50,7 +50,7 @@ python3 hostpulse.py -i targets.txt -o hostpulse
 
 Below is a preview of **HostPulse** in action:
 
-<img width="850" height="252" alt="image" src="https://github.com/user-attachments/assets/bf9ccdec-becc-4b0e-b521-75d9a6f7f8ab" />
+<img width="829" height="228" alt="image" src="https://github.com/user-attachments/assets/fcab6119-2f0c-44c7-b598-7df53b894135" />
 
 ---
 
@@ -63,6 +63,7 @@ github.com
 dead-domain.example
 ```
 ---
+
 ## 📤 Outputs
 
 - **results_alive.txt** - plain list of alive domains (one per line).  
@@ -83,6 +84,8 @@ dead-domain.example
 | `error` | Errors encountered (timeouts, DNS failures, etc.) |
 
 > The CSV includes **only alive hosts** (as defined above) to keep the output focused.
+
+---
 
 ## 🛠️ Common options
 
@@ -110,5 +113,6 @@ Please follow standard open-source etiquette - open an issue first to discuss ma
 - [SecForgeHub Telegram](https://t.me/SecForgeHub)
 
 ---
+
 ## 📜 License
 **Host-Pulse** is released under the **MIT License** - see `LICENSE` for details.
