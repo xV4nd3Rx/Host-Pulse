@@ -1,0 +1,72 @@
+name: Trivy Repo Scan
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  trivy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 1) Vulnerabilities in deps / code (filesystem scan)
+      - name: Trivy - Vulnerability scan (fs) -> SARIF
+        uses: aquasecurity/trivy-action@v0.33.1
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          format: sarif
+          output: trivy-vuln.sarif
+          exit-code: 1
+
+      - name: Upload SARIF (vuln) to GitHub
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-vuln.sarif
+          category: trivy-vuln
+
+      # 2) Secrets scan
+      - name: Trivy - Secrets scan -> SARIF
+        uses: aquasecurity/trivy-action@v0.33.1
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: secret
+          format: sarif
+          output: trivy-secret.sarif
+          exit-code: 1
+
+      - name: Upload SARIF (secret) to GitHub
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-secret.sarif
+          category: trivy-secret
+
+      # 3) IaC misconfigurations (Terraform/K8s/Helm/Dockerfile/etc)
+      - name: Trivy - IaC scan (config) -> SARIF
+        uses: aquasecurity/trivy-action@v0.33.1
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          format: sarif
+          output: trivy-config.sarif
+          exit-code: 1
+
+      - name: Upload SARIF (config) to GitHub
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-config.sarif
+          category: trivy-config
