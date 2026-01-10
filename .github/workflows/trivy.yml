@@ -1,4 +1,4 @@
-name: Trivy Repo Scan
+name: Trivy Repo Scan (no trivy-action)
 
 on:
   push:
@@ -18,18 +18,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1) Vulnerabilities in deps / code (filesystem scan)
-      - name: Trivy - Vulnerability scan (fs) -> SARIF
-        uses: aquasecurity/trivy-action@0.33.1
+      # (Опционально) кеш базы уязвимостей Trivy, чтобы было быстрее
+      - name: Cache Trivy DB
+        uses: actions/cache@v4
         with:
-          scan-type: fs
-          scan-ref: .
-          scanners: vuln
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
-          format: sarif
-          output: trivy-vuln.sarif
-          exit-code: 1
+          path: .trivycache
+          key: trivy-db-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            trivy-db-${{ runner.os }}-
+
+      # 1) Vulnerabilities (deps / packages) -> SARIF
+      - name: Trivy - vuln scan (fs) -> SARIF
+        run: |
+          mkdir -p .trivycache
+          docker run --rm \
+            -v "${PWD}:/work" \
+            -v "${PWD}/.trivycache:/root/.cache" \
+            -w /work \
+            get.trivy.dev/image/trivy:0.68.1 \
+            fs \
+              --scanners vuln \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              --format sarif \
+              --output trivy-vuln.sarif \
+              .
 
       - name: Upload SARIF (vuln) to GitHub
         uses: github/codeql-action/upload-sarif@v4
@@ -37,16 +50,20 @@ jobs:
           sarif_file: trivy-vuln.sarif
           category: trivy-vuln
 
-      # 2) Secrets scan
-      - name: Trivy - Secrets scan -> SARIF
-        uses: aquasecurity/trivy-action@v0.33.1
-        with:
-          scan-type: fs
-          scan-ref: .
-          scanners: secret
-          format: sarif
-          output: trivy-secret.sarif
-          exit-code: 1
+      # 2) Secrets -> SARIF
+      - name: Trivy - secret scan -> SARIF
+        run: |
+          mkdir -p .trivycache
+          docker run --rm \
+            -v "${PWD}:/work" \
+            -v "${PWD}/.trivycache:/root/.cache" \
+            -w /work \
+            get.trivy.dev/image/trivy:0.68.1 \
+            fs \
+              --scanners secret \
+              --format sarif \
+              --output trivy-secret.sarif \
+              .
 
       - name: Upload SARIF (secret) to GitHub
         uses: github/codeql-action/upload-sarif@v4
@@ -54,16 +71,20 @@ jobs:
           sarif_file: trivy-secret.sarif
           category: trivy-secret
 
-      # 3) IaC misconfigurations (Terraform/K8s/Helm/Dockerfile/etc)
-      - name: Trivy - IaC scan (config) -> SARIF
-        uses: aquasecurity/trivy-action@v0.33.1
-        with:
-          scan-type: config
-          scan-ref: .
-          severity: CRITICAL,HIGH
-          format: sarif
-          output: trivy-config.sarif
-          exit-code: 1
+      # 3) IaC misconfigurations -> SARIF (Terraform/K8s/Helm/Dockerfile/GitHub Actions и т.д.)
+      - name: Trivy - config scan (IaC) -> SARIF
+        run: |
+          mkdir -p .trivycache
+          docker run --rm \
+            -v "${PWD}:/work" \
+            -v "${PWD}/.trivycache:/root/.cache" \
+            -w /work \
+            get.trivy.dev/image/trivy:0.68.1 \
+            config \
+              --severity HIGH,CRITICAL \
+              --format sarif \
+              --output trivy-config.sarif \
+              .
 
       - name: Upload SARIF (config) to GitHub
         uses: github/codeql-action/upload-sarif@v4
