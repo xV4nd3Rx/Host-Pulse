@@ -1,4 +1,4 @@
-name: Trivy Repo Scan (no trivy-action)
+name: Trivy Repo Scan
 
 on:
   push:
@@ -18,75 +18,65 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # (Опционально) кеш базы уязвимостей Trivy, чтобы было быстрее
-      - name: Cache Trivy DB
-        uses: actions/cache@v4
-        with:
-          path: .trivycache
-          key: trivy-db-${{ runner.os }}-${{ github.run_id }}
-          restore-keys: |
-            trivy-db-${{ runner.os }}-
-
-      # 1) Vulnerabilities (deps / packages) -> SARIF
-      - name: Trivy - vuln scan (fs) -> SARIF
+      - name: Install Trivy (binary)
+        shell: bash
         run: |
-          mkdir -p .trivycache
-          docker run --rm \
-            -v "${PWD}:/work" \
-            -v "${PWD}/.trivycache:/root/.cache" \
-            -w /work \
-            get.trivy.dev/image/trivy:0.68.1 \
-            fs \
-              --scanners vuln \
-              --severity HIGH,CRITICAL \
-              --ignore-unfixed \
-              --format sarif \
-              --output trivy-vuln.sarif \
-              .
+          set -euo pipefail
+          TRIVY_VERSION="0.57.1"
 
-      - name: Upload SARIF (vuln) to GitHub
+          sudo apt-get update
+          sudo apt-get install -y wget tar
+
+          wget -q "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" -O /tmp/trivy.tgz
+          tar -xzf /tmp/trivy.tgz -C /tmp trivy
+          sudo install -m 0755 /tmp/trivy /usr/local/bin/trivy
+          trivy --version
+
+      - name: Trivy - Vulnerabilities (fs) -> SARIF
+        shell: bash
+        run: |
+          set -euo pipefail
+          trivy fs \
+            --scanners vuln \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            --format sarif \
+            --output trivy-vuln.sarif \
+            .
+
+      - name: Upload SARIF (vuln) to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-vuln.sarif
           category: trivy-vuln
 
-      # 2) Secrets -> SARIF
-      - name: Trivy - secret scan -> SARIF
+      - name: Trivy - Secrets -> SARIF
+        shell: bash
         run: |
-          mkdir -p .trivycache
-          docker run --rm \
-            -v "${PWD}:/work" \
-            -v "${PWD}/.trivycache:/root/.cache" \
-            -w /work \
-            get.trivy.dev/image/trivy:0.68.1 \
-            fs \
-              --scanners secret \
-              --format sarif \
-              --output trivy-secret.sarif \
-              .
+          set -euo pipefail
+          trivy fs \
+            --scanners secret \
+            --format sarif \
+            --output trivy-secret.sarif \
+            .
 
-      - name: Upload SARIF (secret) to GitHub
+      - name: Upload SARIF (secret) to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-secret.sarif
           category: trivy-secret
 
-      # 3) IaC misconfigurations -> SARIF (Terraform/K8s/Helm/Dockerfile/GitHub Actions и т.д.)
-      - name: Trivy - config scan (IaC) -> SARIF
+      - name: Trivy - IaC Config -> SARIF
+        shell: bash
         run: |
-          mkdir -p .trivycache
-          docker run --rm \
-            -v "${PWD}:/work" \
-            -v "${PWD}/.trivycache:/root/.cache" \
-            -w /work \
-            get.trivy.dev/image/trivy:0.68.1 \
-            config \
-              --severity HIGH,CRITICAL \
-              --format sarif \
-              --output trivy-config.sarif \
-              .
+          set -euo pipefail
+          trivy config \
+            --severity HIGH,CRITICAL \
+            --format sarif \
+            --output trivy-config.sarif \
+            .
 
-      - name: Upload SARIF (config) to GitHub
+      - name: Upload SARIF (config) to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-config.sarif
