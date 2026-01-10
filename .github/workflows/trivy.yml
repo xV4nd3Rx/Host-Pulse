@@ -20,7 +20,7 @@ jobs:
 
       # 1) Vulnerabilities in deps / code (filesystem scan)
       - name: Trivy - Vulnerability scan (fs) -> SARIF
-        uses: aquasecurity/trivy-action@v0.33.1
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: fs
           scan-ref: .
